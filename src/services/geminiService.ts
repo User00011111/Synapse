@@ -5,18 +5,19 @@ const API_KEY = process.env.GEMINI_API_KEY || (import.meta as any).env.VITE_GEMI
 
 const ai = new GoogleGenAI({ apiKey: API_KEY || "" });
 
-export type AnalysisType = 'summary' | 'key-points' | 'sentiment' | 'tone' | 'critique';
+export type AnalysisType = 'summary' | 'key-points' | 'sentiment' | 'grammar' | 'rewrite';
 
 export async function analyzeText(text: string, type: AnalysisType) {
   if (!API_KEY) {
     throw new Error('Gemini API anahtarı bulunamadı. Lütfen çevre değişkenlerini kontrol edin.');
   }
+
   const prompts: Record<AnalysisType, string> = {
-    'summary': 'Bu metni özlü ve anlaşılır bir şekilde özetle. Önemli bilgileri vurgula.',
-    'key-points': 'Bu metinden en önemli 5-7 kilit noktayı liste halinde çıkar.',
-    'sentiment': 'Bu metnin duygu durumunu analiz et. Pozitif, negatif veya nötr olduğunu belirt ve nedenlerini açıkla.',
-    'tone': 'Bu metnin yazım dilini ve tonunu (akademik, dostane, saldırgan, profesyonel vb.) analiz et.',
-    'critique': 'Bu metni yapıcı bir şekilde eleştir. Güçlü ve zayıf yönlerini belirt, geliştirme önerileri sun.'
+    'summary': 'Bu metni özlü ve anlaşılır bir şekilde Türkçe olarak özetle. Önemli bilgileri vurgula.',
+    'key-points': 'Bu metinden en önemli kilit noktaları Türkçe madde işaretleri halinde çıkar.',
+    'sentiment': 'Bu metnin duygu durumunu Türkçe olarak analiz et. Pozitif, negatif veya nötr olduğunu belirt ve nedenlerini açıkla.',
+    'grammar': 'Bu metni dilbilgisi ve yazım kuralları açısından Türkçe olarak kontrol et. Hataları ve düzeltme önerilerini belirt.',
+    'rewrite': 'Bu metnin anlamını bozmadan, daha profesyonel ve etkileyici bir dille Türkçe olarak yeniden düzenle (Rewrite).'
   };
 
   const systemInstruction = `
