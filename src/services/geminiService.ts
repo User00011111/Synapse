@@ -1,10 +1,16 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Vercel/Vite uyumluluğu için her iki yöntemi de kontrol ediyoruz
+const API_KEY = process.env.GEMINI_API_KEY || (import.meta as any).env.VITE_GEMINI_API_KEY;
+
+const ai = new GoogleGenAI({ apiKey: API_KEY || "" });
 
 export type AnalysisType = 'summary' | 'key-points' | 'sentiment' | 'tone' | 'critique';
 
 export async function analyzeText(text: string, type: AnalysisType) {
+  if (!API_KEY) {
+    throw new Error('Gemini API anahtarı bulunamadı. Lütfen çevre değişkenlerini kontrol edin.');
+  }
   const prompts: Record<AnalysisType, string> = {
     'summary': 'Bu metni özlü ve anlaşılır bir şekilde özetle. Önemli bilgileri vurgula.',
     'key-points': 'Bu metinden en önemli 5-7 kilit noktayı liste halinde çıkar.',
